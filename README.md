@@ -29,7 +29,7 @@ El proyecto implementará patrones de diseño para garantizar escalabilidad y ma
 ---
 
 ## Integrantes del Proyecto  
-- **Giuseppe Giovanelli
-- **Lucas Soresi
-- **Micaela Rocio Zubiel
-- **Imanol Mirant Borde
+- Giuseppe Giovanelli
+- Lucas Soresi
+- Micaela Rocio Zubiel
+- Imanol Mirant Borde
