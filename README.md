@@ -28,6 +28,8 @@ El proyecto implementará patrones de diseño para garantizar escalabilidad y ma
 
 ---
 
-## Estado del Proyecto  
-En fase de diseño y definición de arquitectura.  
-
+## Integrantes del Proyecto  
+- **Giuseppe Giovanelli
+- **Lucas Soresi
+- **Micaela Rocio Zubiel
+- **Imanol Mirant Borde
