@@ -1,10 +1,8 @@
-import React from "react";
-import { Modal, Dialog } from "bootstrap";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import './modalTemplate.css';
 import { notify } from "../Alerts/toast";
-import {Container, Row, Col,} from "react-bootstrap";
-import { Button } from "bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import { CASINO, MESSAGES } from "../../constants/gameConstants";
 
 function Casino(props)
 {
@@ -23,60 +21,53 @@ function Casino(props)
       
     }
     
-    useEffect(()=> {
-        const casino = document.getElementById('casino');
+    // Handle casino unlock based on level
+    useEffect(() => {
+        const isCasinoUnlocked = props.lvl >= CASINO.MIN_LEVEL;
 
-        if(props.lvl >= 10)
-        {
+        if (isCasinoUnlocked) {
             setBtncls('btn btn-secondary btn-lg');
-
-            if(show)
-            {
-                casino.style.display = 'inherit';
-              
-        
-            }
-        
-            else {
-                casino.style.display = 'none';
-            }
-
-        }
-        else {
+        } else {
             setBtncls('btn btn-danger btn-lg');
-
-            if(show)
-            {
-                notify("You must have 10 lvl!");
-                SetShow(!show);
-
+            if (show) {
+                notify(MESSAGES.ERRORS.CASINO_LEVEL_REQUIRED);
+                SetShow(false);
             }
         }
+    }, [props.lvl, show]);
 
-        if(props.multiplier == 0)
-        {   setMltp_1('btn btn-outline-light btn-lg');
-            setMltp_2('btn btn-outline-light btn-lg');
-            setMltp_3('btn btn-outline-light btn-lg');
+    // Handle modal display
+    useEffect(() => {
+        const casino = document.getElementById('casino');
+        if (casino) {
+            casino.style.display = show ? 'inherit' : 'none';
         }
-        else  if(props.multiplier == 1.25)
-        {   setMltp_1('btn btn-light btn-lg');
-            setMltp_2('btn btn-outline-light btn-lg');
-            setMltp_3('btn btn-outline-light btn-lg');
-        }
-        else  if(props.multiplier == 1.50)
-        {   setMltp_1('btn btn-outline-light btn-lg');
-            setMltp_2('btn btn-light btn-lg');
-            setMltp_3('btn btn-outline-light btn-lg');
-        }
-        else  if(props.multiplier == 2)
-        {   setMltp_1('btn btn-outline-light btn-lg');
-            setMltp_2('btn btn-outline-light btn-lg');
-            setMltp_3('btn btn-light btn-lg');
-        }
+    }, [show]);
 
+    // Handle multiplier button styling
+    useEffect(() => {
+        const { multiplier } = props;
+        const baseClass = 'btn btn-outline-light btn-lg';
+        const activeClass = 'btn btn-light btn-lg';
 
-
-    })
+        if (multiplier === 0) {
+            setMltp_1(baseClass);
+            setMltp_2(baseClass);
+            setMltp_3(baseClass);
+        } else if (multiplier === CASINO.MULTIPLIERS.LOW) {
+            setMltp_1(activeClass);
+            setMltp_2(baseClass);
+            setMltp_3(baseClass);
+        } else if (multiplier === CASINO.MULTIPLIERS.MEDIUM) {
+            setMltp_1(baseClass);
+            setMltp_2(activeClass);
+            setMltp_3(baseClass);
+        } else if (multiplier === CASINO.MULTIPLIERS.HIGH) {
+            setMltp_1(baseClass);
+            setMltp_2(baseClass);
+            setMltp_3(activeClass);
+        }
+    }, [props.multiplier]);
 
 
 
