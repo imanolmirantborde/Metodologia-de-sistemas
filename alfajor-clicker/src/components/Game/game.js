@@ -11,37 +11,36 @@ import Stockstation from "../ModalComponents/StockStation";
 import Custom from "../ModalComponents/Custom";
 import Casino from "../ModalComponents/Casino";
 import {
-  INITIAL_GAME_STATE,
-  LEVEL_SYSTEM,
-  CASINO as CASINO_CONFIG,
-  UPGRADES,
-  STOCK_CAPACITY,
-  RESTOCK_AMOUNTS,
-  PRESTIGE_RESET,
-  MESSAGES,
+    INITIAL_GAME_STATE,
+    LEVEL_SYSTEM,
+    CASINO as CASINO_CONFIG,
+    UPGRADES,
+    STOCK_CAPACITY,
+    RESTOCK_AMOUNTS,
+    PRESTIGE_RESET,
+    MESSAGES,
 } from "../../constants/gameConstants";
 import {
-  getRandomInt,
-  isWinningRoll,
-  calculateWinnings,
-  canPlayCasino,
+    getRandomInt,
+    isWinningRoll,
+    calculateWinnings,
+    canPlayCasino,
 } from "../../utils/casinoUtils";
 import {
-  roundToDecimal,
-  calculatePercentage,
-  calculateFullStockCost,
-  isWithinBounds,
+    roundToDecimal,
+    calculatePercentage,
+    calculateFullStockCost,
+    isWithinBounds,
 } from "../../utils/mathUtils";
 
 
 
 
 
- class Game extends Component {
-    constructor(props)
-    {
+class Game extends Component {
+    constructor(props) {
         super(props);
-     
+
 
         this.state = {
             click: INITIAL_GAME_STATE.CLICKS,
@@ -79,17 +78,16 @@ import {
         this.StartCasino = this.StartCasino.bind(this);
         this.processCasinoResult = this.processCasinoResult.bind(this);
         this.resetCasinoValues = this.resetCasinoValues.bind(this);
-        
 
-       
-        
+
+
+
     }
 
     /**
      * Initiates a casino game round
      */
-    StartCasino()
-    {
+    StartCasino() {
         const { click, casino_stake, casino_multiplier } = this.state;
 
         if (!canPlayCasino(click, casino_stake, casino_multiplier)) {
@@ -114,8 +112,7 @@ import {
      * @param {number} stake - Bet amount
      * @param {number} randomNumber - Random roll result
      */
-    processCasinoResult(multiplier, stake, randomNumber)
-    {
+    processCasinoResult(multiplier, stake, randomNumber) {
         const winnings = calculateWinnings(multiplier, stake);
 
         if (isWinningRoll(multiplier, randomNumber)) {
@@ -129,8 +126,7 @@ import {
     /**
      * Resets casino values to default
      */
-    resetCasinoValues()
-    {
+    resetCasinoValues() {
         this.setState({
             casino_stake: CASINO_CONFIG.MIN_STAKE,
             casino_multiplier: 0
@@ -140,8 +136,7 @@ import {
     /**
      * Decreases casino stake by increment amount
      */
-    SubstractStake()
-    {
+    SubstractStake() {
         if (this.state.casino_stake > CASINO_CONFIG.MIN_STAKE) {
             this.setState((prevState) => ({
                 casino_stake: prevState.casino_stake - CASINO_CONFIG.STAKE_INCREMENT
@@ -154,8 +149,7 @@ import {
     /**
      * Increases casino stake by increment amount
      */
-    AddCasinoStake()
-    {
+    AddCasinoStake() {
         this.setState((prevState) => ({
             casino_stake: prevState.casino_stake + CASINO_CONFIG.STAKE_INCREMENT
         }));
@@ -165,8 +159,7 @@ import {
      * Sets the casino multiplier
      * @param {number} multiplier - The multiplier value (1.25, 1.50, or 2.00)
      */
-    SetCasinoMuliplier(multiplier)
-    {
+    SetCasinoMuliplier(multiplier) {
         this.setState({
             casino_multiplier: multiplier
         });
@@ -176,8 +169,7 @@ import {
      * Purchases additional stock capacity
      * @param {number} capacityAmount - Amount of capacity to purchase
      */
-    BuyCapacity(capacityAmount)
-    {
+    BuyCapacity(capacityAmount) {
         const totalCost = this.state.capacityPrice * capacityAmount;
 
         if (totalCost < this.state.click) {
@@ -193,8 +185,7 @@ import {
      * Restocks the player's stock by a specified amount or to maximum
      * @param {number|string} restockAmount - Amount to restock or "MAX" for full restock
      */
-    reStock(restockAmount)
-    {
+    reStock(restockAmount) {
         const { Stock, StockMax, Stock_price, click } = this.state;
         const fullStockCost = calculateFullStockCost(Stock, StockMax, Stock_price);
 
@@ -228,8 +219,7 @@ import {
     /**
      * Decreases stock by usage amount
      */
-    SubstractStock()
-    {
+    SubstractStock() {
         this.setState((prevState) => ({
             Stock: prevState.Stock - this.state.Stock_usage
         }));
@@ -238,8 +228,7 @@ import {
     /**
      * Handles the level up system and progression
      */
-    async lvlSystem()
-    {
+    async lvlSystem() {
         if (this.state.xp >= this.state.xp_to_nxt) {
             this.setState((prevState) => ({
                 xp: 0,
@@ -258,8 +247,7 @@ import {
      * Changes (subtracts) points by a given value
      * @param {number} amount - Amount to subtract from clicks
      */
-    ChangePoints(amount)
-    {
+    ChangePoints(amount) {
         this.setState((prevState) => ({
             click: prevState.click - amount
         }));
@@ -268,8 +256,7 @@ import {
     /**
      * Handles player clicking to earn points
      */
-    AddPoints()
-    {
+    AddPoints() {
         const remainingStock = this.state.Stock - this.state.Stock_usage;
 
         if (remainingStock > 0) {
@@ -288,8 +275,7 @@ import {
      * Purchases an upgrade for the player
      * @param {number} upgradeIndex - Index of the upgrade to purchase
      */
-    BuyUpgrade(upgradeIndex)
-    {
+    BuyUpgrade(upgradeIndex) {
         const { StockMax, click, item_price, item_Demand, item_fusage, item_minStock, item_amount } = this.state;
         const price = item_price[upgradeIndex];
         const demandIncrease = item_Demand[upgradeIndex];
@@ -326,8 +312,7 @@ import {
 
 
 
-    render()
-    {
+    render() {
         const { click, Stock, StockMax, Stock_price, capacityPrice, level, Demand, xp, xp_to_nxt } = this.state;
         const { casino_multiplier, casino_stake } = this.state;
         const { item_name, item_price, item_amount, item_Demand, item_minStock, item_fusage } = this.state;
@@ -349,7 +334,7 @@ import {
                             xp={xp}
                             xp2={xp_to_nxt}
                         />
-                        <br/>
+                        <br />
 
                         <Container>
                             <Row>
@@ -386,7 +371,7 @@ import {
                             </Row>
                         </Container>
 
-                        <br/>
+                        <br />
 
                         <Container>
                             <Row>
@@ -435,7 +420,7 @@ import {
                             </Row>
                         </Container>
 
-                        <br/>
+                        <br />
                         <ProgressBar
                             completed={calculatePercentage(Stock, StockMax)}
                             StockMax={StockMax}
